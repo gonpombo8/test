@@ -6,32 +6,33 @@ import { createStorageMiddleware } from 'decentraland-dapps/dist/modules/storage
 
 import { rootReducer } from './reducer'
 import { rootSaga } from './sagas'
-import { isDevelopment } from './config'
 
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+export function initStore() {
+  const composeEnhancers =
+    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const { storageMiddleware, loadStorageMiddleware } = createStorageMiddleware({
-  storageKey: 'decentraland-cli'
-})
-const sagasMiddleware = createSagasMiddleware()
-const transactionMiddleware = createTransactionMiddleware()
-const loggerMiddleware = createLogger({
-  collapsed: () => true,
-  predicate: (_, action) => isDevelopment() || action.type.includes('Failure')
-})
+  const { storageMiddleware, loadStorageMiddleware } = createStorageMiddleware({
+    storageKey: 'decentraland-linker'
+  })
+  const sagasMiddleware = createSagasMiddleware()
+  const transactionMiddleware = createTransactionMiddleware()
+  const loggerMiddleware = createLogger({
+    collapsed: () => true,
+    predicate: (_, _action) => false // isDevelopment() || action.type.includes('Failure')
+  })
 
-const middleware = applyMiddleware(
-  loggerMiddleware,
-  storageMiddleware,
-  transactionMiddleware,
-  sagasMiddleware
-)
+  const middleware = applyMiddleware(
+    sagasMiddleware,
+    loggerMiddleware,
+    storageMiddleware,
+    transactionMiddleware
+  )
 
-const enhancer = composeEnhancers(middleware)
-const store = createStore(rootReducer, enhancer)
+  const enhancer = composeEnhancers(middleware)
+  const store = createStore(rootReducer, enhancer)
 
-loadStorageMiddleware(store)
+  sagasMiddleware.run(rootSaga())
+  loadStorageMiddleware(store)
 
-sagasMiddleware.run(rootSaga())
-
-export { store }
+  return store
+}

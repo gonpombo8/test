@@ -1,12 +1,12 @@
 import React from 'react'
-import { Address, Blockie, Header, Button } from 'decentraland-ui'
-import Navbar from 'decentraland-dapps/dist/containers/Navbar'
+import { Address, Blockie, Header, Button, Navbar } from 'decentraland-ui'
+// import Navbar from 'decentraland-dapps/dist/containers/Navbar'
+import { ChainId } from '@dcl/schemas'
 
-import { getConfig, isRopsten, isDevelopment } from '../../config'
+import { getConfig, isDevelopment } from '../../config'
 import { coordsToString } from '../../modules/land/utils'
 import Error from '../Error'
 import { Props } from './types'
-
 
 export default class LinkScenePage extends React.PureComponent<Props> {
   handleSignature = (e: any) => {
@@ -59,7 +59,12 @@ export default class LinkScenePage extends React.PureComponent<Props> {
       <React.Fragment>
         {isConnecting ? null : <p>Could not find any wallet</p>}
         <p>
-          <Button primary onClick={onConnectWallet} loading={isConnecting} disabled={isConnecting}>
+          <Button
+            primary
+            onClick={onConnectWallet}
+            loading={isConnecting}
+            disabled={isConnecting}
+          >
             Reconnect{' '}
           </Button>
         </p>
@@ -86,18 +91,27 @@ export default class LinkScenePage extends React.PureComponent<Props> {
   }
 
   render() {
-    const { error, isConnected, isUpdateAuthorized, isAuthorizationLoading, signed } = this.props
+    const {
+      error,
+      isConnected,
+      isUpdateAuthorized,
+      isAuthorizationLoading,
+      signed,
+      wallet
+    } = this.props
     const { x, y } = getConfig('baseParcel')
     const rootCID = getConfig('rootCID')
+    const isRopsten = wallet?.chainId === ChainId.ETHEREUM_ROPSTEN
+
     return (
       <div className="LinkScenePage">
         <Navbar />
-        <Header>Update LAND dato</Header>
+        <Header>Update LAND data</Header>
         {this.renderWalletData()}
         <img
           className="map"
           src={`https://api.decentraland.${
-            isRopsten() ? 'zone' : 'org'
+            isRopsten ? 'zone' : 'org'
           }/v1/parcels/${x}/${y}/map.png`}
           alt={`Base parcel ${x},${y}`}
         />
@@ -110,7 +124,12 @@ export default class LinkScenePage extends React.PureComponent<Props> {
             <Button
               primary
               onClick={this.handleSignature}
-              disabled={!isConnected || !!error || isAuthorizationLoading || !isUpdateAuthorized}
+              disabled={
+                !isConnected ||
+                !!error ||
+                isAuthorizationLoading ||
+                !isUpdateAuthorized
+              }
             >
               Sign and Deploy
             </Button>
@@ -118,8 +137,8 @@ export default class LinkScenePage extends React.PureComponent<Props> {
         </form>
         {isConnected && signed && (
           <p>
-            Content was succesfully signed and it's being uploaded. You can close this page and
-            check the CLI for more info.
+            Content was succesfully signed and it's being uploaded. You can
+            close this page and check the CLI for more info.
           </p>
         )}
         {error ? (
@@ -140,7 +159,7 @@ export default class LinkScenePage extends React.PureComponent<Props> {
             color: white;
           }
         `}</style>
-        {isRopsten() ? (
+        {isRopsten ? (
           <style>{`
             body:before {
               content: 'Using Ropsten test network';

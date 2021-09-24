@@ -25,10 +25,12 @@ function* handleFetchLandRequest(action: FetchLandRequestAction) {
   try {
     const { x, y } = action.payload
     const data: string = yield call(() => LANDRegistry['landData'](x, y))
-    const land: LANDMeta = data ? yield call(() => decodeLandData(data)) : getEmptyLandData()
+    const land: LANDMeta = data
+      ? yield call(() => decodeLandData(data))
+      : getEmptyLandData()
     yield put(fetchLandSuccess(land))
-  } catch (error: any) {
-    yield put(fetchLandFailure(error.message))
+  } catch (error) {
+    yield put(fetchLandFailure((error as Error).message))
   }
 }
 
@@ -54,6 +56,8 @@ function decodeLandData(data = '') {
       }
     }
     default:
-      throw new Error(`Unknown version when trying to decode land data: "${data}"`)
+      throw new Error(
+        `Unknown version when trying to decode land data: "${data}"`
+      )
   }
 }

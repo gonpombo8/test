@@ -1,4 +1,4 @@
-import { Network } from '@dcl/schemas';
+import { Network } from '@dcl/schemas'
 
 export type LinkerResponse = {
   address: string
@@ -6,6 +6,9 @@ export type LinkerResponse = {
   network: Network
 }
 
-export async function closeServer(ok: boolean, message: LinkerResponse): Promise<void> {
+export async function closeServer(
+  ok: boolean,
+  message: LinkerResponse
+): Promise<void> {
   await fetch(`/api/close?ok=${ok}&reason=${JSON.stringify(message)}`)
 }

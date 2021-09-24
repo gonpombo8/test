@@ -1,9 +1,12 @@
 import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects'
 import { getConnectedProvider } from 'decentraland-dapps/dist/lib/eth'
-import { getAddress, getNetwork } from 'decentraland-dapps/dist/modules/wallet/selectors'
+import {
+  getAddress,
+  getNetwork
+} from 'decentraland-dapps/dist/modules/wallet/selectors'
 import { Web3Provider } from '@ethersproject/providers'
 import { toUtf8Bytes } from '@ethersproject/strings'
-import { Network } from '@dcl/schemas';
+import { Network } from '@dcl/schemas'
 import { hexlify } from '@ethersproject/bytes'
 
 import { closeServer } from '../server/utils'
@@ -36,8 +39,8 @@ function* handleSignContentRequest(action: SignContentRequestAction) {
       provider.send('personal_sign', [hexlify(dataToSign), addr.toLowerCase()])
     )
     yield put(signContentSuccess(signedMessage))
-  } catch (error: any) {
-    yield put(signContentFailure(error.message))
+  } catch (error) {
+    yield put(signContentFailure((error as Error).message))
   }
 }
 
@@ -48,9 +51,10 @@ function* handleSignContentSuccess(action: SignContentSuccessAction) {
 
   try {
     yield call(() => {
+      // tslint:disable-next-line: no-floating-promises
       closeServer(true, { signature, address, network })
     })
-  } catch (error: any) {
-    yield put(signContentFailure(error.message))
+  } catch (error) {
+    yield put(signContentFailure((error as Error).message))
   }
 }

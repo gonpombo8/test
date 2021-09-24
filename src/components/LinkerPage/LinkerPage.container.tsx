@@ -25,9 +25,7 @@ import { MapStateProps, MapDispatchProps } from './types'
 
 import LinkerPage from './LinkerPage'
 
-const mapState = (
-  state: RootState,
-): MapStateProps => {
+const mapState = (state: RootState): MapStateProps => {
   return {
     base: getLand(state),
     wallet: getWallet(state)!,
@@ -38,7 +36,7 @@ const mapState = (
     signed: !!getSignature(state),
     isUpdateAuthorized: isUpdateAuthorized(state),
     authorizations: getAuthorizations(state),
-    isAuthorizationLoading: isAuthorizationLoading(state),
+    isAuthorizationLoading: isAuthorizationLoading(state)
   }
 }
 

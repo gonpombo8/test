@@ -16,7 +16,10 @@ import { Contract } from '@ethersproject/contracts'
 
 export function* authorizationSaga() {
   yield takeEvery(CONNECT_WALLET_SUCCESS, handleConnectWalletSuccess)
-  yield takeEvery(FETCH_AUTHORIZATIONS_REQUEST, handleFetchAuthorizationsRequest)
+  yield takeEvery(
+    FETCH_AUTHORIZATIONS_REQUEST,
+    handleFetchAuthorizationsRequest
+  )
 }
 
 function* handleFetchAuthorizationsRequest() {
@@ -45,11 +48,17 @@ function* handleFetchAuthorizationsRequest() {
       pAuthorizations.push(pAuthorization)
     }
 
-    const parcelAuthorizations: Authorization[] = yield call(() => Promise.all(pAuthorizations))
+    const parcelAuthorizations: Authorization[] = yield call(() =>
+      Promise.all(pAuthorizations)
+    )
 
     // If not authorized check permissions on estate
-    const notAllowedAuthorizations = parcelAuthorizations.filter(a => !a.isUpdateAuthorized)
-    const allowedAuthorizations = parcelAuthorizations.filter(a => a.isUpdateAuthorized)
+    const notAllowedAuthorizations = parcelAuthorizations.filter(
+      a => !a.isUpdateAuthorized
+    )
+    const allowedAuthorizations = parcelAuthorizations.filter(
+      a => a.isUpdateAuthorized
+    )
 
     const pEstateAuthorizations: unknown[] = []
     for (const a of notAllowedAuthorizations) {
@@ -78,8 +87,8 @@ function* handleFetchAuthorizationsRequest() {
 
     const authorizations = [...allowedAuthorizations, ...estateAuthorizations]
     yield put(fetchAuthorizationsSuccess(authorizations))
-  } catch (error: any) {
-    yield put(fetchAuthorizationsFailure(error.message))
+  } catch (error) {
+    yield put(fetchAuthorizationsFailure((error as Error).message))
   }
 }
 

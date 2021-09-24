@@ -25,15 +25,15 @@ export type Props = {
 
 export type MapStateProps = Pick<
   Props,
-  |'base'
-  |'wallet'
-  |'isLandLoading'
-  |'isConnected'
-  |'isConnecting'
-  |'error'
-  |'signed'
-  |'isUpdateAuthorized'
-  |'authorizations'
-  |'isAuthorizationLoading'
+  | 'base'
+  | 'wallet'
+  | 'isLandLoading'
+  | 'isConnected'
+  | 'isConnecting'
+  | 'error'
+  | 'signed'
+  | 'isUpdateAuthorized'
+  | 'authorizations'
+  | 'isAuthorizationLoading'
 >
-export type MapDispatchProps = Pick<Props, 'onConnectWallet'|'onSignContent'>
+export type MapDispatchProps = Pick<Props, 'onConnectWallet' | 'onSignContent'>

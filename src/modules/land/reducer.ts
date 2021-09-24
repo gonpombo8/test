@@ -1,4 +1,7 @@
-import { loadingReducer, LoadingState } from 'decentraland-dapps/dist/modules/loading/reducer'
+import {
+  loadingReducer,
+  LoadingState
+} from 'decentraland-dapps/dist/modules/loading/reducer'
 
 import {
   FetchLandRequestAction,
